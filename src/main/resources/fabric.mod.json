@@ -9,7 +9,7 @@
   "contact": {
     "sources": "https://github.com/rdh/pulse"
   },
-  "license": "GNU General Public License v3.0",
+  "license": "GPL-3.0-only",
   "environment": "*",
   "entrypoints": {
     "main": ["dev.rdh.pulse.PulseMod"],

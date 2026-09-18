@@ -135,6 +135,8 @@ tasks.processResources {
         expand("version" to v)
     }
 
+    from("LICENSE")
+
     from(generateMappings) {
         into("assets/pulse")
     }
