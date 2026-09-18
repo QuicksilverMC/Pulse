@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.rdh.pulse.spark.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AbstractSamplerMixin",
+    "MinecraftServerAccessor"
+  ],
+  "client": [
+    "ClientCommandMixin",
+    "ClientChatCompletionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

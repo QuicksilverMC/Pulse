@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "pulse",
+  "name": "pulse",
+  "version": "${version}",
+  "description": "Profiling and render instrumentation for Minecraft 1.8.9",
+  "authors": ["rdh"],
+  "contributors": ["Luck"],
+  "contact": {
+    "sources": "https://github.com/rdh/pulse"
+  },
+  "license": "GNU General Public License v3.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.rdh.pulse.PulseMod"],
+    "client": ["dev.rdh.pulse.PulseMod::initializeClient"]
+  },
+  "mixins": ["spark.pulse.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "1.8.9",
+    "osl-core": ">=0.7.0",
+    "osl-executors": ">=0.1.0",
+    "osl-keybinds": ">=0.2.0",
+    "osl-lifecycle-events": ">=0.5.0"
+  }
+}
