@@ -15,7 +15,7 @@
     "main": ["dev.rdh.pulse.PulseMod"],
     "client": ["dev.rdh.pulse.PulseMod::initializeClient"]
   },
-  "mixins": ["spark.pulse.mixins.json"],
+  "mixins": ["spark.pulse.mixins.json", "render.pulse.mixins.json"],
   "depends": {
     "fabricloader": ">=0.18.4",
     "minecraft": "1.8.9",

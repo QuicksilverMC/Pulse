@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.rdh.pulse.render.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "BlockEntityRenderDispatcherMixin",
+    "DebugOverlayMixin",
+    "GameRendererMixin",
+    "GLMixin",
+    "ParticleManagerMixin",
+    "TextRendererMixin",
+    "WorldRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
