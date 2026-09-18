@@ -1,6 +1,9 @@
 package dev.rdh.pulse.render;
 
 import dev.rdh.pulse.PulseMod;
+
+import it.unimi.dsi.fastutil.longs.Long2LongMap;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
@@ -15,7 +18,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +60,7 @@ public final class DrawCalls {
 		}
 	}
 
-	private static final Map<Long, Long> stubs = new HashMap<>();
+	private static final Long2LongMap stubs = new Long2LongOpenHashMap();
 	private static GLCapabilities patched;
 	private static boolean failed;
 
@@ -177,7 +179,7 @@ public final class DrawCalls {
 	}
 
 	private static void swap(GLCapabilities caps, boolean install) {
-		Map<Long, Long> replacements = new HashMap<>();
+		Long2LongMap replacements = new Long2LongOpenHashMap();
 		for (Map.Entry<String, FunctionDescriptor> function : FUNCTIONS.entrySet()) {
 			long original;
 			try {
@@ -198,8 +200,8 @@ public final class DrawCalls {
 
 		PointerBuffer table = caps.getAddressBuffer();
 		for (int i = 0; i < table.capacity(); i++) {
-			Long replacement = replacements.get(table.get(i));
-			if (replacement != null) {
+			long replacement = replacements.get(table.get(i));
+			if (replacement != replacements.defaultReturnValue()) {
 				table.put(i, replacement);
 			}
 		}
