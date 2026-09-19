@@ -10,6 +10,7 @@ import me.lucko.spark.common.sampler.ThreadDumper.GameThread;
 import me.lucko.spark.common.tick.TickHook;
 import me.lucko.spark.common.tick.TickReporter;
 
+import dev.rdh.pulse.render.GlInfo;
 import dev.rdh.pulse.spark.AbstractFabricSparkPlugin;
 
 import me.lucko.spark.common.platform.world.WorldInfoProvider;
@@ -134,6 +135,14 @@ public final class FabricClientSparkPlugin extends AbstractFabricSparkPlugin {
             }
             JsonObject metadata = new JsonObject();
             metadata.add("resourcePacks", packs);
+            GlInfo gl = GlInfo.get();
+            if (gl != null) {
+                JsonObject gpu = new JsonObject();
+                gpu.addProperty("vendor", gl.vendor());
+                gpu.addProperty("renderer", gl.renderer());
+                gpu.addProperty("version", gl.version());
+                metadata.add("gpu", gpu);
+            }
             return Map.of("client", metadata);
         };
     }

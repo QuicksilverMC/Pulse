@@ -32,4 +32,9 @@ public final class FabricClientCommandSender extends AbstractCommandSender<UUID>
 	public boolean hasPermission(String permission) {
 		return true;
 	}
+
+	@Override
+	protected Object getObjectForComparison() {
+		return getName();
+	}
 }
