@@ -1,0 +1,43 @@
+name: build
+on: [ workflow_dispatch, push, pull_request ]
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[skip]')"
+    runs-on: ubuntu-latest
+    steps:
+      -   name: checkout
+          uses: actions/checkout@v7
+
+      -   name: setup java
+          uses: actions/setup-java@v5
+          with:
+            distribution: zulu
+            java-version: 21
+
+      -   name: setup gradle
+          uses: gradle/actions/setup-gradle@v6
+          with:
+            cache-encryption-key: ${{ SECRETS.GRADLE_ENCRYPTION_KEY }}
+            build-scan-publish: false
+            build-scan-terms-of-use-url: https://gradle.com/terms-of-service
+            build-scan-terms-of-use-agree: yes
+
+      -   name: restore local gradle caches
+          uses: actions/cache@v6
+          with:
+            key: gradle-local-cache-${{ runner.os }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties', '**/*.gradle.kts', 'gradle.properties') }}
+            restore-keys: |
+              gradle-local-cache-${{ runner.os }}-
+            path: |
+              ./.gradle/loom-cache/
+
+      -   name: do the build
+          run: ./gradlew assemble --stacktrace --no-daemon
+
+      -   name: upload artifacts
+          uses: actions/upload-artifact@v7
+          with:
+            name: pulse-artifacts-v${{ github.run_number }}
+            path: |
+              build/libs/*
