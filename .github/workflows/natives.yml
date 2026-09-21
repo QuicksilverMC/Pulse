@@ -1,0 +1,101 @@
+name: tracy natives
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Tracy version to build (defaults to tracy_version in gradle.properties)
+        required: false
+        type: string
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      -   name: checkout
+          uses: actions/checkout@v7
+
+      -   name: resolve tracy version
+          id: version
+          run: |
+            version="${{ inputs.version }}"
+            if [ -z "$version" ]; then
+              version="$(sed -n 's/^tracy_version=//p' gradle.properties)"
+            fi
+            if [ -z "$version" ]; then
+              echo "no tracy version given and tracy_version is missing from gradle.properties" >&2
+              exit 1
+            fi
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: resolve
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          -   target: windows-x64
+              runs-on: windows-latest
+          -   target: linux-x64
+              runs-on: ubuntu-22.04
+          -   target: linux-arm64
+              runs-on: ubuntu-22.04-arm
+          -   target: macos
+              runs-on: macos-latest
+              cmake-args: -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64' -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      -   name: checkout
+          uses: actions/checkout@v7
+
+      -   name: build tracy client
+          shell: bash
+          run: .github/scripts/build-tracy-client.sh "${{ needs.resolve.outputs.version }}" "out/${{ matrix.target }}" ${{ matrix.cmake-args }}
+
+      -   name: upload
+          uses: actions/upload-artifact@v7
+          with:
+            name: tracy-${{ matrix.target }}
+            path: out/${{ matrix.target }}
+
+  commit:
+    needs: [ resolve, build ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      -   name: checkout
+          uses: actions/checkout@v7
+
+      -   name: download
+          uses: actions/download-artifact@v7
+          with:
+            pattern: tracy-*
+            path: downloaded
+
+      -   name: stage natives
+          run: |
+            rm -rf src/main/resources/natives
+            for dir in downloaded/tracy-*; do
+              target="src/main/resources/natives/${dir#downloaded/tracy-}"
+              mkdir -p "$target"
+              cp "$dir"/*TracyClient* "$target/"
+            done
+            # the licence and version marker are identical per target, so keep one copy
+            cp "$(find downloaded -name LICENSE-tracy | head -1)" src/main/resources/natives/LICENSE-tracy
+            cp "$(find downloaded -name VERSION | head -1)" src/main/resources/natives/tracy-version.txt
+            find src/main/resources/natives -type f | sort
+
+      -   name: commit
+          run: |
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add src/main/resources/natives
+            if git diff --quiet --cached; then
+              echo "natives are unchanged"
+              exit 0
+            fi
+            git commit -m "build tracy ${{ needs.resolve.outputs.version }} natives"
+            git push
