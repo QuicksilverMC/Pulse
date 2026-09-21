@@ -27,9 +27,10 @@ case "$(uname -s)" in
     *) echo "unsupported platform: $(uname -s)" >&2; exit 1 ;;
 esac
 
-built="$(find "${src}/build" -type f \( -name 'TracyClient.dll' -o -name 'libTracyClient.so*' -o -name 'libTracyClient.dylib*' \) -print -quit)"
+built="$(find "${src}/build" -type f \( -name 'TracyClient.dll' -o -name 'libTracyClient.so*' -o -name 'libTracyClient*.dylib' \) -print -quit)"
 if [ -z "${built}" ]; then
-    echo "no TracyClient library was produced" >&2
+    echo "no TracyClient library was produced; build directory contains:" >&2
+    find "${src}/build" -maxdepth 2 \( -name '*TracyClient*' -o -name '*.dylib' -o -name '*.so*' -o -name '*.dll' -o -name '*.a' -o -name '*.lib' \) >&2
     exit 1
 fi
 
