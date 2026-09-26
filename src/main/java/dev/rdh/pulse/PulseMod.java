@@ -2,6 +2,7 @@ package dev.rdh.pulse;
 
 import dev.rdh.pulse.spark.client.FabricClientSparkPlugin;
 import dev.rdh.pulse.spark.server.FabricServerSparkPlugin;
+import dev.rdh.pulse.tracy.Tracy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.discovery.ModResolutionException;
@@ -15,6 +16,7 @@ public final class PulseMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Tracy.init();
         MinecraftServerEvents.READY_WORLD.register(FabricServerSparkPlugin::initialize);
         MinecraftServerEvents.STOP.register(FabricServerSparkPlugin::stop);
     }
