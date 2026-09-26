@@ -23,8 +23,8 @@ public final class PulseMod implements ModInitializer {
 
     public static void initializeClient() throws ModResolutionException {
         FabricLoader l = FabricLoader.getInstance();
-        if (!l.isModLoaded("lenis") && !l.isModLoaded("legacy-lwjgl3")) {
-            throw new ModResolutionException("Pulse requires lenis or legacy-lwjgl3 to be installed on the client!");
+        if (!l.isModLoaded("pylon") && !l.isModLoaded("legacy-lwjgl3")) {
+            throw new ModResolutionException("Pulse requires pylon or legacy-lwjgl3 to be installed on the client!");
         }
         FabricClientSparkPlugin.initialize();
     }

@@ -46,7 +46,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${v("fabric")}")
     ploceus.dependOsl(v("osl"))
 
-    modImplementation("pl.tomgirl:lenis:${v("lenis")}")
+    modImplementation("pl.tomgirl:pylon:${v("pylon")}")
     shade("me.lucko:spark-common:${v("spark")}") {
         exclude(group = "org.ow2.asm")
     }
