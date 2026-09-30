@@ -47,6 +47,10 @@ public final class FabricClientSparkPlugin extends AbstractFabricSparkPlugin {
         MinecraftClientEvents.STOP.register(_ -> instance.close());
     }
 
+    public static SparkPlatform platform() {
+        return instance == null ? null : instance.platform;
+    }
+
     public static boolean executeClientCommand(String message) {
         if (instance == null || !message.startsWith("/")) {
             return false;

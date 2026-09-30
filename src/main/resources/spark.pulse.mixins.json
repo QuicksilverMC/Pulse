@@ -9,6 +9,7 @@
   ],
   "client": [
     "ClientCommandMixin",
+    "MinecraftMixin",
     "ClientChatCompletionMixin"
   ],
   "injectors": {

@@ -2,6 +2,7 @@ package dev.rdh.pulse;
 
 import dev.rdh.pulse.spark.client.FabricClientSparkPlugin;
 import dev.rdh.pulse.spark.server.FabricServerSparkPlugin;
+import dev.rdh.pulse.spark.Startup;
 import dev.rdh.pulse.tracy.Tracy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -16,6 +17,7 @@ public final class PulseMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Startup.mark("loader");
         Tracy.init();
         MinecraftServerEvents.READY_WORLD.register(FabricServerSparkPlugin::initialize);
         MinecraftServerEvents.STOP.register(FabricServerSparkPlugin::stop);
@@ -27,5 +29,6 @@ public final class PulseMod implements ModInitializer {
             throw new ModResolutionException("Pulse requires pylon or legacy-lwjgl3 to be installed on the client!");
         }
         FabricClientSparkPlugin.initialize();
+        Startup.profile();
     }
 }

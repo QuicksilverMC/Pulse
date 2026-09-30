@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.rdh.pulse.render.DrawCalls;
 import dev.rdh.pulse.render.DrawCalls.Category;
 import dev.rdh.pulse.render.FrameStats;
+import dev.rdh.pulse.spark.Startup;
 import dev.rdh.pulse.tracy.Tracy;
 import dev.rdh.pulse.tracy.TracyGpu;
 import net.minecraft.client.Minecraft;
@@ -29,6 +30,7 @@ abstract class GameRendererMixin {
 			FrameStats.endFrame();
 			TracyGpu.endFrame();
 			Tracy.frameMark();
+			Startup.report();
 		}
 	}
 
